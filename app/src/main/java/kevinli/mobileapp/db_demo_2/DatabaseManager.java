@@ -38,18 +38,14 @@ public class DatabaseManager {
     }
 
     public Cursor fetch() {
-        //String [] columns = new String[] {DatabaseHelper.USER_ID, DatabaseHelper.USER_NAME, DatabaseHelper.USER_PASSWORD};
         Cursor cursor = database.query(DatabaseHelper.DATABASE_TABLE, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
-            //long idIndex = cursor.getColumnIndex(DatabaseHelper.USER_ID);
-            //long usernameIndex = cursor.getColumnIndex(DatabaseHelper.USER_NAME);
-            //long userpasswordIndex = cursor.getColumnIndex(DatabaseHelper.USER_PASSWORD);
-            //System.out.println("idIndex = " + Long.toString(idIndex) + "usernameIndex = " + Long.toString(usernameIndex) + Long.toString(userpasswordIndex));
             String ID = cursor.getString(0);
             String TITLE_EN = cursor.getString(1);
             String DISTRICT_EN = cursor.getString(2);
             String ROUTE_EN = cursor.getString(3);
             String HOWTOACCESS_EN = cursor.getString(4);
+            trackInfo.addTrack(TITLE_EN, DISTRICT_EN, ROUTE_EN, HOWTOACCESS_EN);
             System.out.println("I have read ID: " + ID
                     + " Title_en: " + TITLE_EN
                     + " District_en: " + DISTRICT_EN
@@ -57,11 +53,6 @@ public class DatabaseManager {
                     + " HowToAccess_en: " + HOWTOACCESS_EN);
         }
         cursor.close();
-        /*
-        if (cursor != null){
-            cursor.moveToFirst();
-        }
-        */
         return cursor;
     }
 

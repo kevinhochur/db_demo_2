@@ -9,6 +9,7 @@ public class trackInfo {
     public static String ROUTE = "route";
     public static String HOW_TO_ACCESS = "how_to_access";
 
+    // An array list that stores many HashMaps
     public static ArrayList<HashMap<String, String>> trackList = new ArrayList<>();
 
     // Create and add contact to contact list

@@ -14,6 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final String ROUTE_EN = "Route_en";
     static final String HOWTOACCESS_EN = "HowToAccess_en";
 
+    // prevent re-creation of the database
     static final String CREATE_DB_IF_NOT_EXISTS = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE
             + " (_id INTEGER PRIMARY KEY, "
             + TITLE_EN + " TEXT, "
