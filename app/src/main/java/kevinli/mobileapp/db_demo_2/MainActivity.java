@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,12 +14,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
 import java.sql.SQLDataException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    private DatabaseHelper dbHelper = new DatabaseHelper(this);
     private DatabaseManager dbManager = new DatabaseManager(this);
 
     private String TAG = "MainActivity";
@@ -30,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.listview);
+
         try {
             dbManager.open();
             dbManager.fetch();
-            ArrayList<HashMap<String, String>> trackList_main = trackInfo.trackList;
             SimpleAdapter adapter = new SimpleAdapter(
                     this,
-                    trackList_main,
+                    trackInfo.trackList,
                     R.layout.list_view_layout,
                     new String[] { trackInfo.TITLE, trackInfo.DISTRICT, trackInfo.ROUTE },
                     new int[] { R.id.title, R.id.district, R.id.route }
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
             );
+            dbManager.close();
         } catch (SQLDataException e) {
             throw new RuntimeException(e);
         }
@@ -70,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Toast.makeText(this, "Updating the Data", Toast.LENGTH_SHORT).show();
+        try {
+            dbManager.open();
+        } catch (SQLDataException e) {
+            throw new RuntimeException(e);
+        }
         JsonHandlerThread handler = new JsonHandlerThread();
         handler.start();
         try {
@@ -83,15 +89,16 @@ public class MainActivity extends AppCompatActivity {
                 district_en = String.valueOf(trackInfo.trackList.get(i).get("district"));
                 route_en = String.valueOf(trackInfo.trackList.get(i).get("route"));
                 howToAccess_en = String.valueOf(trackInfo.trackList.get(i).get("how_to_access"));
-                dbManager.insert(title_en, district_en, route_en, howToAccess_en);
-                System.out.println("Inserted all data!");
+                dbManager.insert(i, title_en, district_en, route_en, howToAccess_en);
+                //System.out.println("Inserted all data!");
                 //String resultFetched = String.valueOf(trackInfo.trackList);
                 //System.out.println("Result Fetched: " + "\n" + resultFetched);
-                Toast.makeText(this, "Data is Up to Date", Toast.LENGTH_SHORT).show();
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return true;
+        dbManager.close();
+        Toast.makeText(this, "Data is Up to Date", Toast.LENGTH_SHORT).show();
+        return false;
     }
 }

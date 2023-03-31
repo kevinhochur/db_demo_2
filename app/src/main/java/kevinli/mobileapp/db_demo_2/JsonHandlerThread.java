@@ -73,6 +73,8 @@ public class JsonHandlerThread extends Thread {
             try {
                 // Getting JSON Array
                 JSONArray tracks = new JSONArray(trackStr);
+                // Clear the trackList
+                trackInfo.trackList.clear();
                 // looping through All tracks
                 for (int i = 0; i < tracks.length(); i++) {
                     JSONObject c = tracks.getJSONObject(i);

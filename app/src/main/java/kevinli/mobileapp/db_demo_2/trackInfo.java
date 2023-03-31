@@ -14,14 +14,14 @@ public class trackInfo {
 
     // Create and add contact to contact list
     public static void addTrack(String Title_en, String District_en, String Route_en, String HowToAccess_en) {
-        // Create a contact
+        // Create a track
         HashMap<String, String> track = new HashMap<>();
         track.put(TITLE, Title_en);
         track.put(DISTRICT, District_en);
         track.put(ROUTE, Route_en);
         track.put(HOW_TO_ACCESS, HowToAccess_en);
 
-        // Add the contact to the contact list
+        // Add the track to the track list
         trackList.add(track);
     }
 }

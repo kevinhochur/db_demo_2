@@ -1,5 +1,8 @@
 package kevinli.mobileapp.db_demo_2;
 
+import static kevinli.mobileapp.db_demo_2.DatabaseHelper.CREATE_DB_IF_NOT_EXISTS;
+import static kevinli.mobileapp.db_demo_2.DatabaseHelper.DATABASE_TABLE;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -22,23 +25,26 @@ public class DatabaseManager {
         return this;
     }
 
-    public void close() {
-        dbHelper.close();
+    public void close() { dbHelper.close();
     }
 
-    public void insert(String title_en, String district_en, String route_en, String howtoaccess_en) {
+    public void insert(int i, String title_en, String district_en, String route_en, String howtoaccess_en) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.TITLE_EN, title_en);
         contentValues.put(DatabaseHelper.DISTRICT_EN, district_en);
         contentValues.put(DatabaseHelper.ROUTE_EN, route_en);
         contentValues.put(DatabaseHelper.HOWTOACCESS_EN, howtoaccess_en);
-        System.out.println("Ready to Insert " + title_en + " in " + district_en);
-        System.out.println("The Table to be inserted is: " + DatabaseHelper.DATABASE_TABLE);
-        database.insert(DatabaseHelper.DATABASE_TABLE, null, contentValues);
+        if (i == 0) {
+            dbHelper.deleteFromTable(database);
+            database.replace(DATABASE_TABLE, null, contentValues);
+        } else {
+            database.replace(DATABASE_TABLE, null, contentValues);
+        }
     }
 
     public Cursor fetch() {
-        Cursor cursor = database.query(DatabaseHelper.DATABASE_TABLE, null, null, null, null, null, null);
+        //database.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+        Cursor cursor = database.query(DATABASE_TABLE, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             String ID = cursor.getString(0);
             String TITLE_EN = cursor.getString(1);
